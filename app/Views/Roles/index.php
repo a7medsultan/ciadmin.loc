@@ -25,7 +25,10 @@
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h5 class="m-0"><i class="fas fa-user-check mx-2"></i>List Roles</h5>
+                            <h5 class="m-0">
+                                <i class="fas fa-user-check mx-2"></i><?= lang('main.listRoles') ?>
+                                <button onclick="load_form(`<?= site_url('roles/form') ?>`, `<?= lang('main.addRole') ?>`)" class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal"><?= lang('main.btnAddNew') ?> <i class="fas fa-plus-circle"></i></button>
+                            </h5>
                         </div>
                         <div class="card-body">
                             <div id="toolbar">
@@ -71,13 +74,13 @@
     var selections = []
 
     function getIdSelections() {
-        return $.map($table.bootstrapTable('getSelections'), function (row) {
+        return $.map($table.bootstrapTable('getSelections'), function(row) {
             return row.id
         })
     }
 
     function responseHandler(res) {
-        $.each(res.rows, function (i, row) {
+        $.each(res.rows, function(i, row) {
             row.state = $.inArray(row.id, selections) !== -1
         })
         return res
@@ -85,7 +88,7 @@
 
     function detailFormatter(index, row) {
         var html = []
-        $.each(row, function (key, value) {
+        $.each(row, function(key, value) {
             html.push('<p><b>' + key + ':</b> ' + value + '</p>')
         })
         return html.join('')
@@ -107,16 +110,54 @@
     }
 
     window.operateEvents = {
-        'click .edit': function (e, value, row, index) {
-            alert('You click edit action, row: ' + JSON.stringify(row))
+        'click .edit': function(e, value, row, index) {
+            load_form('<?= site_url("roles/form/") ?>' + row.id, 'Edit User');
+            $('#form_modal').modal('show');
         },
-        'click .delete': function (e, value, row, index) {
-            $table.bootstrapTable('remove', {
-                field: 'id',
-                values: [row.id]
-            })
+        'click .delete': function(e, value, row, index) {
+            Swal.fire({
+                title: `Delete User ${row.full_name} ?`,
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '<?= site_url("roles/delete") ?>',
+                        method: 'post',
+                        data: {
+                            "id": row.id,
+                            "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+                        },
+                        success: function(data) {
+                            $table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            })
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "Record is not deleted.",
+                                icon: "error"
+                            });
+                        }
+                    });
+
+                }
+            });
         }
     }
+
 
     function totalTextFormatter(data) {
         return 'Total'
@@ -128,9 +169,9 @@
 
     function totalPriceFormatter(data) {
         var field = this.field
-        return '$' + data.map(function (row) {
+        return '$' + data.map(function(row) {
             return +row[field].substring(1)
-        }).reduce(function (sum, i) {
+        }).reduce(function(sum, i) {
             return sum + i
         }, 0)
     }
@@ -140,8 +181,7 @@
             //height: 550,
             //locale: $('#locale').val(),
             locale: 'en-us',
-            columns: [
-                {
+            columns: [{
                     field: 'id',
                     title: '#',
                     sortable: true,
@@ -164,14 +204,36 @@
                 }
             ]
         })
-        
-        $table.on('all.bs.table', function (e, name, args) {
+
+        $table.on('all.bs.table', function(e, name, args) {
             console.log(name, args)
         })
-        
+
     }
 
-    $(function () {
+    $(function() {
         initTable()
     })
+
+    $('#search').on('keyup', function() {
+        $table.bootstrapTable('refresh');
+    });
+
+    function queryParams(params) {
+        params.search = $('#search').val();
+        return params
+    }
+
+    function load_form(url, title) {
+        $('#form_title').html('');
+        $('#form_fields').html('');
+        $.ajax({
+            url: url,
+            method: 'get',
+            success: function(response) {
+                $('#form_title').html(title);
+                $('#form_fields').html(response);
+            }
+        });
+    }
 </script>

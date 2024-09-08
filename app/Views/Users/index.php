@@ -27,8 +27,8 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h5 class="m-0">
-                                <i class="fas fa-user-check mx-2"></i><?= lang('main.list_users') ?>
-                                <button onclick="load_form('<?= site_url("users/form") ?>', 'Add Users')" class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal">Add New <i class="fas fa-plus-circle"></i></button> 
+                                <i class="fas fa-user-check mx-2"></i><?= lang('main.listUsers') ?>
+                                <button onclick="load_form('<?= site_url("users/form") ?>', '<?= lang('main.addUser') ?>')" class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal">Add New <i class="fas fa-plus-circle"></i></button>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -76,13 +76,13 @@
     var selections = []
 
     function getIdSelections() {
-        return $.map($table.bootstrapTable('getSelections'), function (row) {
+        return $.map($table.bootstrapTable('getSelections'), function(row) {
             return row.id
         })
     }
 
     function responseHandler(res) {
-        $.each(res.rows, function (i, row) {
+        $.each(res.rows, function(i, row) {
             row.state = $.inArray(row.id, selections) !== -1
         })
         return res
@@ -90,7 +90,7 @@
 
     function detailFormatter(index, row) {
         var html = []
-        $.each(row, function (key, value) {
+        $.each(row, function(key, value) {
             html.push('<p><b>' + key + ':</b> ' + value + '</p>')
         })
         return html.join('')
@@ -112,11 +112,11 @@
     }
 
     window.operateEvents = {
-        'click .edit': function (e, value, row, index) {
+        'click .edit': function(e, value, row, index) {
             load_form('<?= site_url("users/form/") ?>' + row.id, 'Edit User');
             $('#form_modal').modal('show');
         },
-        'click .delete': function (e, value, row, index) {
+        'click .delete': function(e, value, row, index) {
             Swal.fire({
                 title: `Delete User ${row.full_name} ?`,
                 text: "You won't be able to revert this!",
@@ -135,7 +135,7 @@
                             "id": row.id,
                             "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
                         },
-                        success: function (data) {
+                        success: function(data) {
                             $table.bootstrapTable('remove', {
                                 field: 'id',
                                 values: [row.id]
@@ -146,7 +146,7 @@
                                 icon: "success"
                             });
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             Swal.fire({
                                 title: "Error!",
                                 text: "Record is not deleted.",
@@ -170,9 +170,9 @@
 
     function totalPriceFormatter(data) {
         var field = this.field
-        return '$' + data.map(function (row) {
+        return '$' + data.map(function(row) {
             return +row[field].substring(1)
-        }).reduce(function (sum, i) {
+        }).reduce(function(sum, i) {
             return sum + i
         }, 0)
     }
@@ -182,8 +182,7 @@
             //height: 550,
             //locale: $('#locale').val(),
             locale: 'en-us',
-            columns: [
-                {
+            columns: [{
                     field: 'sn',
                     title: '#',
                     sortable: true,
@@ -213,14 +212,14 @@
                     sortable: true,
                     align: 'center'
                 },
-                
+
                 {
                     field: 'role',
                     title: 'Role',
                     sortable: true,
                     align: 'center'
                 },
-                
+
                 {
                     field: 'operate',
                     title: 'Actions',
@@ -232,18 +231,18 @@
             ]
         })
 
-        $table.on('all.bs.table', function (e, name, args) {
+        $table.on('all.bs.table', function(e, name, args) {
             //console.log(name, args)
         })
 
     }
 
-    $(function () {
+    $(function() {
         initTable()
 
     })
 
-    $('#search').on('keyup', function () {
+    $('#search').on('keyup', function() {
         $table.bootstrapTable('refresh');
     });
 
@@ -258,7 +257,7 @@
         $.ajax({
             url: url,
             method: 'get',
-            success: function (response) {
+            success: function(response) {
                 $('#form_title').html(title);
                 $('#form_fields').html(response);
             }

@@ -113,7 +113,7 @@ class Users extends BaseController
             if (!$this->validateData($data, [
                 'first_name' => 'required|max_length[50]|min_length[3]',
                 'last_name' => 'required|max_length[50]|min_length[3]',
-                'email' => "required|max_length[254]|valid_email|is_unique[user.email,id,{$id}]",
+                'email' => "required|max_length[254]|valid_email|is_unique[users.email,id,{$id}]",
                 'phone' => 'required|max_length[16]|min_length[9]',
                 'password' => 'required|max_length[20]|min_length[8]',
                 'role_id' => 'required',
@@ -193,8 +193,7 @@ class Users extends BaseController
     public function view()
     {
         $router = service('router');
-        $controller = explode(DIRECTORY_SEPARATOR, $router->controllerName());
-        $class = $controller[count($controller) - 1];
+        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
         if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
@@ -222,8 +221,7 @@ class Users extends BaseController
         helper('form');
 
         $router = service('router');
-        $controller = explode(DIRECTORY_SEPARATOR, $router->controllerName());
-        $class = $controller[count($controller) - 1];
+        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
         if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
@@ -245,7 +243,7 @@ class Users extends BaseController
             //Checks whether the submitted data passed the validation rules.
             if (!$this->validateData($data, [
                 'email' => [
-                    'rules' => "required|max_length[100]|valid_email|is_not_unique[user.email]",
+                    'rules' => "required|max_length[100]|valid_email|is_not_unique[users.email]",
                     'errors' => [
                         'required' => 'The email is required',
                         'max_length' => 'Too long email',
@@ -310,11 +308,6 @@ class Users extends BaseController
                     'message' => $ex->getMessage()
                 ]);
         }
-    }
-
-    function test()
-    {
-        echo password_verify('passx', password_hash('pass', PASSWORD_DEFAULT));
     }
 
     public function setSessionData($user)

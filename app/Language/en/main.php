@@ -11,6 +11,7 @@ return [
     'btnApprove' => 'Approve',
     'btnReject' => 'Reject',
     'btnImport' => 'Import',
+    'btnAddNew' => 'Add New',
     'pending' => 'Pending',
     'approved' => 'Approved',
     'rejected' => 'Rejected',
@@ -21,6 +22,7 @@ return [
     'users' => 'Users',
     'dashboard' => 'Dashboard',
     'listUsers' => 'List Users',
+    'addUser' => 'Add User',
     'systemSettings' => 'System Settings',
     'createdAt' => 'Created At',
     'updatedAt' => 'Updated At',
@@ -115,4 +117,6 @@ return [
     'login' => 'Login',
     'manage_users' => 'Manage Users',
     'loggedIn' => 'You have logged in successfully',
+    'listRoles' => 'List Roles',
+    'addRole' => 'Add Role',
 ];

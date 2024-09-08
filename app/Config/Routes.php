@@ -21,6 +21,9 @@ $routes->get('users/test', [Users::class, 'test']);
 
 $routes->get('roles', [Roles::class, 'index']);
 $routes->get('roles/index', [Roles::class, 'index']);
-$routes->get('roles/datatable/(:any)', [Roles::class, 'datatable']);
-$routes->get('roles/save/', [Roles::class, 'save']);
+$routes->get('roles/datatable', [Roles::class, 'datatable']);
+$routes->get('roles/form/(:segment)', [Roles::class, 'form']);
+$routes->get('roles/form', [Roles::class, 'form']);
+$routes->post('roles/save/', [Roles::class, 'save']);
+$routes->post('roles/delete/', [Roles::class, 'delete']);
 $routes->get('roles/view', [Roles::class, 'view']);
