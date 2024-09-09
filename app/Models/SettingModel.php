@@ -8,15 +8,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SystemLogModel extends Model
+class SettingModel extends Model
 {
 
-    protected $table = 'system_logs';
+    protected $table = 'settings';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['action', 'name'];
+    protected $allowedFields = ['system_settings'];
     protected bool $allowEmptyInserts = false;
     // Dates
     protected $useTimestamps = true;
@@ -28,16 +28,37 @@ class SystemLogModel extends Model
     public function getNew()
     {
         $record['id'] = '';
-        $record['name'] = '';
+        $record['name_en'] = '';
+        $record['name_ar'] = '';
 
         return $record;
+    }
+
+    function getNameEn($id)
+    {
+        $record = $this->select('name_en')->where('id', $id)->get()->getRow(); // Fetch the row corresponding to the given ID
+        if ($record) {
+            return $record->name_en; // Return the name_en if a row is found
+        } else {
+            return false; // Return false if no row is found
+        }
+    }
+
+    function getNameAr($id)
+    {
+        $record = $this->select('name_ar')->where('id', $id)->get()->getRow(); // Fetch the row corresponding to the given ID
+        if ($record) {
+            return $record->name_ar; // Return the name_ar if a row is found
+        } else {
+            return false; // Return false if no row is found
+        }
     }
 
     public function getDatatable($params = null)
     {
         $where = "";
         if ($params['search']) {
-            $where = "name like '%{$params['search']}%' or created_at like '%{$params['search']}%' or action like '%{$params['search']}%'";
+            $where = "name_en like '%{$params['search']}%' or name_ar like '%{$params['search']}%' or created_at like '%{$params['search']}%'";
             $this->where($where);
         }
 
@@ -56,7 +77,7 @@ class SystemLogModel extends Model
     {
         $where = "";
         if ($params['search']) {
-            $where = "name like '%{$params['search']}%' or created_at like '%{$params['search']}%' or action like '%{$params['search']}%'";
+            $where = "name_en like '%{$params['search']}%' or name_ar like '%{$params['search']}%' or created_at like '%{$params['search']}%'";
             $this->where($where);
         }
 

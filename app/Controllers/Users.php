@@ -181,6 +181,12 @@ class Users extends BaseController
                 'modified_by' => 1,
             ]);
 
+            // log insert/save
+
+            $logData['action'] = $data['id'] ? "edit" : "add";
+            $logData['name'] = "User {$post['first_name']} {$post['last_name']} was {$logData['action']}ed by admin";
+
+            \CodeIgniter\Events\Events::trigger('record_log', $logData);
 
             // Return a success response with HTTP status code 200
             return $this->response->setStatusCode(Response::HTTP_OK)

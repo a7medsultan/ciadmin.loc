@@ -3,6 +3,8 @@
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Users;
 use App\Controllers\Roles;
+use App\Controllers\SystemLogs;
+use App\Controllers\Settings;
 
 /**
  * @var RouteCollection $routes
@@ -27,3 +29,13 @@ $routes->get('roles/form', [Roles::class, 'form']);
 $routes->post('roles/save/', [Roles::class, 'save']);
 $routes->post('roles/delete/', [Roles::class, 'delete']);
 $routes->get('roles/view', [Roles::class, 'view']);
+
+$routes->get('(?i)systemLogs', [SystemLogs::class, 'index']);
+$routes->get('(?i)systemLogs/index', [SystemLogs::class, 'index']);
+$routes->get('(?i)systemLogs/datatable', [SystemLogs::class, 'datatable']);
+$routes->get('(?i)systemLogs/view', [SystemLogs::class, 'view']);
+$routes->get('(?i)systemLogs/test', [SystemLogs::class, 'test']);
+
+$routes->get('settings', [Settings::class, 'index']);
+$routes->get('settings/index', [Settings::class, 'index']);
+$routes->post('settings/save', [Settings::class, 'save']);

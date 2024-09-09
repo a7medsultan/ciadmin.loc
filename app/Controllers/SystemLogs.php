@@ -19,26 +19,23 @@ class SystemLogs extends BaseController
     public function index()
     {
         $router = service('router');
-        $controller = explode(DIRECTORY_SEPARATOR, $router->controllerName());
-        $class = $controller[count($controller) - 1];
+        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php"))
-        {
+        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = ucfirst($method); // Capitalize the first letter
 
-        if ($this->request->isAJAX())
-        {
+        if ($this->request->isAJAX()) {
             return view("$class/$method");
         }
 
         return view('templates/header', $data)
-                . view("$class/$method")
-                . view('templates/footer');
+            . view("$class/$method")
+            . view('templates/footer');
     }
 
     function datatable()
@@ -52,23 +49,19 @@ class SystemLogs extends BaseController
         $total = $this->systemLogModel->countFiltered($params);
 
         $rows = [];
-        foreach ($records as $record)
-        {
+        foreach ($records as $record) {
             $row = new \stdClass();
             $row->id = $record['id'];
             $row->name = $record['name'];
 
             $cssClass = 'warning';
-            if ($record['action'] == 'add')
-            {
+            if ($record['action'] == 'add') {
                 $cssClass = 'success';
             }
-            if ($record['action'] == 'edit')
-            {
+            if ($record['action'] == 'edit') {
                 $cssClass = 'info';
             }
-            if ($record['action'] == 'delete')
-            {
+            if ($record['action'] == 'delete') {
                 $cssClass = 'danger';
             }
 
@@ -89,25 +82,23 @@ class SystemLogs extends BaseController
     public function view()
     {
         $router = service('router');
-        $controller = explode(DIRECTORY_SEPARATOR, $router->controllerName());
-        $class = $controller[count($controller) - 1];
+
+        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php"))
-        {
+        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = ucfirst($method); // Capitalize the first letter
 
-        if ($this->request->isAJAX())
-        {
+        if ($this->request->isAJAX()) {
             return view("$class/$method");
         }
 
         return view('templates/header', $data)
-                . view("$class/$method")
-                . view('templates/footer');
+            . view("$class/$method")
+            . view('templates/footer');
     }
 }

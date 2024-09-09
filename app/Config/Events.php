@@ -33,7 +33,7 @@ Events::on('pre_system', static function (): void {
             ob_end_flush();
         }
 
-        ob_start(static fn ($buffer) => $buffer);
+        ob_start(static fn($buffer) => $buffer);
     }
 
     /*
@@ -52,4 +52,13 @@ Events::on('pre_system', static function (): void {
             });
         }
     }
+
+    Events::on('record_log', static function ($logData, $oldRecord = null, $newRecord = null) {
+        // log operation
+        $systemLogModel = new \App\Models\SystemLogModel();
+        $systemLogModel->insert([
+            'action' => $logData['action'],
+            'name' => $logData['name'],
+        ]);
+    });
 });
