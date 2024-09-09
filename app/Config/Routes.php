@@ -25,6 +25,7 @@ $routes->group('', ['filter' => 'authFilter'], static function ($routes) {
     $routes->post('users/delete/', [Users::class, 'delete']);
     $routes->get('users/profile', [Users::class, 'profile']);
     $routes->get('users/view', [Users::class, 'view']);
+    $routes->get('users/logout', [Users::class, 'logout']);
     $routes->get('users/test', [Users::class, 'test']);
 
     $routes->get('roles', [Roles::class, 'index']);

@@ -105,6 +105,7 @@ class Users extends BaseController
 
     function save()
     {
+        $session = session();
         try {
             helper('form');
 
@@ -184,7 +185,7 @@ class Users extends BaseController
             // log insert/save
 
             $logData['action'] = $data['id'] ? "edit" : "add";
-            $logData['name'] = "User {$post['first_name']} {$post['last_name']} was {$logData['action']}ed by admin";
+            $logData['name'] = "User {$post['first_name']} {$post['last_name']} was {$logData['action']}ed by {$session->get('userData')['fullName']}";
 
             \CodeIgniter\Events\Events::trigger('record_log', $logData);
 
@@ -208,11 +209,18 @@ class Users extends BaseController
 
     function delete()
     {
+        $session = session();
         $this->userModel = model(UserModel::class);
 
         $id = $this->request->getPost('id');
-
+        $user = $this->userModel->find($id);
         if ($this->userModel->delete($id)) {
+
+            $logData['action'] = "delete";
+            $logData['name'] = "User {$user['full_name']} was {$logData['action']}ed by {$session->get('userData')['fullName']}";
+
+            \CodeIgniter\Events\Events::trigger('record_log', $logData);
+
             return $this->response->setStatusCode(Response::HTTP_OK)
                 ->setContentType('application/json')
                 ->setJSON([
@@ -380,5 +388,11 @@ class Users extends BaseController
         }
 
         return redirect()->to('users/login');
+    }
+
+    function test()
+    {
+        $session = session();
+        echo "by {$session->get('userData')['fullName']}";
     }
 }

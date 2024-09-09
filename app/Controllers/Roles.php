@@ -88,6 +88,7 @@ class Roles extends BaseController
 
     function save()
     {
+        $session = session();
         try {
             helper('form');
 
@@ -121,6 +122,11 @@ class Roles extends BaseController
                 'modified_by' => 1,
             ]);
 
+
+            $logData['action'] = $data['id'] ? "edit" : "add";
+            $logData['name'] = "Role {$post['name']} was {$logData['action']}ed by {$session->get('userData')['fullName']}";
+
+            \CodeIgniter\Events\Events::trigger('record_log', $logData);
             // Return a success response with HTTP status code 200
             return $this->response->setStatusCode(Response::HTTP_OK)
                 ->setContentType('application/json')
@@ -141,11 +147,18 @@ class Roles extends BaseController
 
     function delete()
     {
+        $session = session();
         $this->roleModel = model(RoleModel::class);
 
         $id = $this->request->getPost('id');
-
+        $role = $this->roleModel->find($id);
         if ($this->roleModel->delete($id)) {
+
+            $logData['action'] = "delete";
+            $logData['name'] = "Role {$role['name']} was {$logData['action']}ed by {$session->get('userData')['fullName']}";
+
+            \CodeIgniter\Events\Events::trigger('record_log', $logData);
+
             return $this->response->setStatusCode(Response::HTTP_OK)
                 ->setContentType('application/json')
                 ->setJSON([
