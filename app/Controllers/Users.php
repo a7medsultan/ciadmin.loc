@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\RoleModel;
 use App\Models\UserModel;
+use CodeIgniter\Config\Services;
 use CodeIgniter\HTTP\Response;
 
 class Users extends BaseController
@@ -102,22 +103,39 @@ class Users extends BaseController
             . view('templates/footer');
     }
 
-    function save($id = null)
+    function save()
     {
         try {
             helper('form');
 
-            $data = $this->request->getPost(['first_name', 'last_name', 'email', 'phone', 'password', 'role_id']);
+            $data = $this->request->getPost(['id', 'first_name', 'last_name', 'email', 'phone', 'password', 'password_confirmation', 'role_id']);
 
             //Checks whether the submitted data passed the validation rules.
-            if (!$this->validateData($data, [
+            $validation = Services::validation();
+
+
+            // Define base validation rules
+            $validationRules = [
                 'first_name' => 'required|max_length[50]|min_length[3]',
                 'last_name' => 'required|max_length[50]|min_length[3]',
-                'email' => "required|max_length[254]|valid_email|is_unique[users.email,id,{$id}]",
+                'email' => "required|max_length[254]|valid_email|is_unique[users.email,id,{$data['id']}]",
                 'phone' => 'required|max_length[16]|min_length[9]',
-                'password' => 'required|max_length[20]|min_length[8]',
                 'role_id' => 'required',
-            ]))
+            ];
+
+            // Modify password validation rule based on condition
+            if ($data['password']) {
+                $validationRules['password'] = [
+                    'label' => 'Password',
+                    'rules' => $data['id'] ? 'required|min_length[8]|max_length[255]|regex_match[^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$]' : 'min_length[8]|max_length[255]|regex_match[^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$]',
+                    'errors' => [
+                        'regex_match' => 'Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.'
+                    ]
+                ];
+                $validationRules['password_confirmation'] = 'required|matches[password]';
+            }
+
+            if (!$this->validateData($data, $validationRules))
             //if (true)
             {
                 // Return an error response with HTTP status code 400
@@ -126,27 +144,43 @@ class Users extends BaseController
                     ->setContentType('application/json')
                     ->setJSON([
                         'success' => false,
-                        'message' => validation_errors()
+                        'message' => $validation->getErrors()
                     ]);
             }
 
             // Gets the validated data.
             $post = $this->validator->getValidated();
 
-            $model = model(UserModel::class);
+            if ($data['id']) {
+                // Fetch the existing user record
+                $user = $this->userModel->find($data['id']);
 
+                if ($user) {
+                    // Assign the user model for updating
+                    $model = $this->userModel;
+                } else {
+                    // Handle case where user is not found, if needed
+                    throw new PageNotFoundException();
+                }
+            } else {
+                // Create a new instance for a new user
+                $model = model(UserModel::class);
+            }
+
+            // Use the model object to save the data
             $model->save([
-                'id' => $id,
+                'id' => $data['id'] ?? null, // null for new users
                 'first_name' => $post['first_name'],
                 'last_name' => $post['last_name'],
                 'full_name' => "{$post['first_name']} {$post['last_name']}",
                 'email' => $post['email'],
                 'phone' => str_replace(['(', ')', '-', ' '], '', $post['phone']),
-                'password' => password_hash($post['password'], PASSWORD_DEFAULT),
+                'password' => $data['password'] ? password_hash($post['password'], PASSWORD_DEFAULT) : $user['password'] ?? null, // Use the existing password if it's an update
                 'role_id' => $post['role_id'],
                 'added_by' => 1,
                 'modified_by' => 1,
             ]);
+
 
             // Return a success response with HTTP status code 200
             return $this->response->setStatusCode(Response::HTTP_OK)

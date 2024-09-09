@@ -34,8 +34,14 @@
 </div>
 <!-- ./wrapper -->
 
-
-
+<!-- common footer -->
+<script>
+    $(document).on('hidden.bs.modal', '#form_modal', function() {
+        // Your function here
+        $('#table').bootstrapTable('refresh');
+    });
+</script>
 
 </body>
+
 </html>
