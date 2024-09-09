@@ -274,7 +274,7 @@ class Users extends BaseController
         return view("$class/$method", $data);
     }
 
-    function authinticate()
+    function authenticate()
     {
         try {
             helper('form');
