@@ -32,7 +32,7 @@
                         <div class="card-body">
 
                             <!-- form start -->
-                            <form id="save_form" action="<?= site_url("settings/save") ?>" method="post" enctype="multipart/form-data">
+                            <form id="save_form" action="<?= site_url("{$module}/{$class}/save") ?>" method="post" enctype="multipart/form-data">
                                 <?= csrf_field() ?>
                                 <div class="card">
                                     <div class="card-body">

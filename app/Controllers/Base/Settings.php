@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Base;
 
+use App\Controllers\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\SettingModel;
 use CodeIgniter\HTTP\Response;
@@ -10,26 +11,36 @@ class Settings extends BaseController
 {
 
     public $settingsModel;
+    public $module;
+    public $class;
+    public $template_header;
+    public $template_footer;
 
     function __construct()
     {
         $this->settingsModel = model(SettingModel::class);
+
+        $router = service('router');
+        $this->module = 'Base';
+        $this->class = basename(str_replace('\\', '/', $router->controllerName()));
+        $this->template_header = 'templates/header';
+        $this->template_footer = 'templates/footer';
     }
 
     public function index()
     {
         helper('form');
         $router = service('router');
-
-        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
+        if (!is_file(APPPATH . "Views/{$this->module}/{$this->class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = ucfirst($method); // Capitalize the first letter
+        $data['module'] = $this->module;
+        $data['class'] = $this->class;
 
         $settings = $this->settingsModel->find(1);
 
@@ -61,12 +72,12 @@ class Settings extends BaseController
 
         $data['settings'] = json_decode($settings['system_settings'], true);
         if ($this->request->isAJAX()) {
-            return view("$class/$method");
+            return view("{$this->module}/{$this->class}/{$method}");
         }
 
-        return view('templates/header', $data)
-            . view("$class/$method")
-            . view('templates/footer');
+        return view($this->template_header, $data)
+            . view("{$this->module}/{$this->class}/{$method}")
+            . view($this->template_footer);
     }
 
     function save()

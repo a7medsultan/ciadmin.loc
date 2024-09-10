@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Roles</h1>
+                    <h1 class="m-0"><?= lang('main.systemLogs') ?></h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Roles</li>
+                        <li class="breadcrumb-item"><a href="#"><?= lang('main.home') ?></a></li>
+                        <li class="breadcrumb-item active"><?= lang('main.systemLog') ?></li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -26,18 +26,17 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h5 class="m-0">
-                                <i class="fas fa-user-check mx-2"></i><?= lang('main.listRoles') ?>
-                                <button onclick="load_form(`<?= site_url('roles/form') ?>`, `<?= lang('main.addRole') ?>`)" class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal"><?= lang('main.btnAddNew') ?> <i class="fas fa-plus-circle"></i></button>
+                                <i class="fas fa-sitemap mx-2"></i><?= lang('main.listLogs') ?>
                             </h5>
                         </div>
                         <div class="card-body">
                             <div id="toolbar">
+                                <input type="text" id="search" name="search" class="mb-2 form-control" placeholder="Search">
                             </div>
                             <table
                                 id="table"
                                 class="table table-sm table-striped"
                                 data-toolbar="#toolbar"
-                                data-search="true"
                                 data-show-refresh="true"
                                 data-show-toggle="true"
                                 data-show-columns="true"
@@ -53,7 +52,8 @@
                                 data-page-list="[10, 25, 50, 100, all]"
                                 data-show-footer="false"
                                 data-side-pagination="server"
-                                data-url="<?= base_url('roles/datatable') ?>"
+                                data-query-params="queryParams"
+                                data-url="<?= base_url("{$module}/{$class}/datatable") ?>"
                                 data-response-handler="responseHandler">
                             </table>
 
@@ -96,7 +96,7 @@
 
     function operateFormatter(value, row, index) {
         var html = `<div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false" data-container="body">
                             <span class="sr-only">Toggle Dropdown</span>
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
@@ -111,12 +111,12 @@
 
     window.operateEvents = {
         'click .edit': function(e, value, row, index) {
-            load_form('<?= site_url("roles/form/") ?>' + row.id, 'Edit User');
+            load_form('<?= site_url("{$module}/{$class}/form/") ?>' + row.id, '<?= lang('main.editLog') ?>');
             $('#form_modal').modal('show');
         },
         'click .delete': function(e, value, row, index) {
             Swal.fire({
-                title: `Delete User ${row.full_name} ?`,
+                title: `<?= lang('main.deleteLog') ?> row.name ?`,
                 text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
@@ -127,7 +127,7 @@
                 if (result.isConfirmed) {
 
                     $.ajax({
-                        url: '<?= site_url("roles/delete") ?>',
+                        url: '<?= site_url("{$module}/{$class}/delete") ?>',
                         method: 'post',
                         data: {
                             "id": row.id,
@@ -140,14 +140,14 @@
                             })
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your file has been deleted.",
+                                text: `row.name has been deleted.`,
                                 icon: "success"
                             });
                         },
                         error: function(xhr) {
                             Swal.fire({
                                 title: "Error!",
-                                text: "Record is not deleted.",
+                                text: `row.name is not deleted.`,
                                 icon: "error"
                             });
                         }
@@ -157,7 +157,6 @@
             });
         }
     }
-
 
     function totalTextFormatter(data) {
         return 'Total'
@@ -182,37 +181,50 @@
             //locale: $('#locale').val(),
             locale: 'en-us',
             columns: [{
-                    field: 'id',
+                    field: 'sn',
                     title: '#',
-                    sortable: true,
+                    sortable: false,
                     align: 'center',
                 },
                 {
-                    field: 'name',
-                    title: 'Role Name',
+                    field: 'created_at',
+                    title: '<?= lang('main.createdAt') ?>',
                     sortable: true,
                     align: 'center'
                 },
-
+                {
+                    field: 'action',
+                    title: '<?= lang('main.action') ?>',
+                    sortable: true,
+                    align: 'center'
+                },
+                {
+                    field: 'name',
+                    title: '<?= lang('main.name') ?>',
+                    sortable: true,
+                    align: 'center'
+                },
                 {
                     field: 'operate',
-                    title: 'Actions',
+                    title: '<?= lang('main.actions') ?>',
                     align: 'center',
                     clickToSelect: false,
                     events: window.operateEvents,
-                    formatter: operateFormatter
+                    formatter: operateFormatter,
+                    visible: false
                 }
             ]
         })
 
         $table.on('all.bs.table', function(e, name, args) {
-            console.log(name, args)
+            //console.log(name, args)
         })
 
     }
 
     $(function() {
         initTable()
+
     })
 
     $('#search').on('keyup', function() {

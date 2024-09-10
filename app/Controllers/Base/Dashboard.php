@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Base;
 
+use App\Controllers\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException; // Add this line
 use App\Models\RoleModel;
 

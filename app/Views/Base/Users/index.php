@@ -28,7 +28,7 @@
                         <div class="card-header">
                             <h5 class="m-0">
                                 <i class="fas fa-user-check mx-2"></i><?= lang('main.listUsers') ?>
-                                <button onclick="load_form('<?= site_url("users/form") ?>', '<?= lang('main.addUser') ?>')" class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal">Add New <i class="fas fa-plus-circle"></i></button>
+                                <button onclick='load_form(`<?= site_url("{$module}/{$class}/form") ?>`, `<?= lang("main.addUser") ?>`)' class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal">Add New <i class="fas fa-plus-circle"></i></button>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -55,7 +55,7 @@
                                 data-show-footer="false"
                                 data-side-pagination="server"
                                 data-query-params="queryParams"
-                                data-url="<?= base_url('users/datatable') ?>"
+                                data-url="<?= base_url("$module/$class/datatable") ?>"
                                 data-response-handler="responseHandler">
                             </table>
 
@@ -113,7 +113,7 @@
 
     window.operateEvents = {
         'click .edit': function(e, value, row, index) {
-            load_form('<?= site_url("users/form/") ?>' + row.id, 'Edit User');
+            load_form('<?= site_url("$module/$class/form/") ?>' + row.id, 'Edit User');
             $('#form_modal').modal('show');
         },
         'click .delete': function(e, value, row, index) {
@@ -129,7 +129,7 @@
                 if (result.isConfirmed) {
 
                     $.ajax({
-                        url: '<?= site_url("users/delete") ?>',
+                        url: '<?= site_url("$module/$class/delete") ?>',
                         method: 'post',
                         data: {
                             "id": row.id,

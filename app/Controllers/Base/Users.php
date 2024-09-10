@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Base;
+
+use App\Controllers\BaseController;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\RoleModel;
@@ -13,37 +15,49 @@ class Users extends BaseController
 
     public $userModel;
     public $roleModel;
+    public $module;
+    public $class;
+    public $template_header;
+    public $template_footer;
 
     function __construct()
     {
+
         $this->userModel = model(UserModel::class);
         $this->roleModel = model(RoleModel::class);
+
+        $router = service('router');
+        $this->module = 'Base';
+        $this->class = basename(str_replace('\\', '/', $router->controllerName()));
+        $this->template_header = 'templates/header';
+        $this->template_footer = 'templates/footer';
     }
 
     public function index()
     {
 
         $router = service('router');
-        $class = basename(str_replace('\\', '/', $router->controllerName()));
         $method = $router->methodName();
 
 
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
+        if (!is_file(APPPATH . "Views/{$this->module}/{$this->class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
 
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = ucfirst($method); // Capitalize the first letter
+        $data['module'] = $this->module;
+        $data['class'] = $this->class;
 
         if ($this->request->isAJAX()) {
-            return view("$class/$method");
+            return view("{$this->module}/{$this->class}/{$method}");
         }
 
-        return view('templates/header', $data)
-            . view("$class/$method")
-            . view('templates/footer');
+        return view($this->template_header, $data)
+            . view("{$this->module}/{$this->class}/{$method}")
+            . view($this->template_footer);
     }
 
     function datatable()
@@ -82,25 +96,27 @@ class Users extends BaseController
 
 
         $router = service('router');
-        $class = basename(str_replace('\\', '/', $router->controllerName()));
+
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
+        if (!is_file(APPPATH . "Views/{$this->module}/{$this->class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['roles'] = $this->roleModel->findAll();
-        $data['title'] = $id ? "Edit $class" : "Add $class";
+        $data['title'] = $id ? "Edit $this->class" : "Add $this->class";
         $data['user'] = $id ? $this->userModel->find($id) : $this->userModel->getNew();
+        $data['module'] = $this->module;
+        $data['class'] = $this->class;
 
         if ($this->request->isAJAX()) {
-            return view("$class/$method", $data);
+            return view("{$this->module}/{$this->class}/{$method}", $data);
         }
 
-        return view('templates/header',)
-            . view("$class/$method", $data)
-            . view('templates/footer');
+        return view($this->template_header,)
+            . view("{$this->module}/{$this->class}/{$method}", $data)
+            . view($this->template_footer);
     }
 
     function save()
@@ -241,23 +257,25 @@ class Users extends BaseController
     public function view()
     {
         $router = service('router');
-        $class = basename(str_replace('\\', '/', $router->controllerName()));
+
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
+        if (!is_file(APPPATH . "Views/{$this->module}/{$this->class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = ucfirst($method); // Capitalize the first letter
+        $data['module'] = $this->module;
+        $data['class'] = $this->class;
 
         if ($this->request->isAJAX()) {
-            return view("$class/$method");
+            return view("{$this->module}/{$this->class}/{$method}");
         }
 
-        return view('templates/header', $data)
-            . view("$class/$method")
-            . view('templates/footer');
+        return view($this->template_header, $data)
+            . view("{$this->module}/{$this->class}/{$method}")
+            . view($this->template_footer);
     }
 
     function login()
@@ -269,17 +287,19 @@ class Users extends BaseController
         helper('form');
 
         $router = service('router');
-        $class = basename(str_replace('\\', '/', $router->controllerName()));
+
         $method = $router->methodName();
 
-        if (!is_file(APPPATH . "Views/{$class}/{$method}.php")) {
+        if (!is_file(APPPATH . "Views/{$this->module}/{$this->class}/{$method}.php")) {
             // Whoops, we don't have a page for that!
             throw new PageNotFoundException($method);
         }
 
         $data['title'] = lang('main.login');
+        $data['module'] = $this->module;
+        $data['class'] = $this->class;
 
-        return view("$class/$method", $data);
+        return view("{$this->module}/{$this->class}/{$method}", $data);
     }
 
     function authenticate()
@@ -381,13 +401,7 @@ class Users extends BaseController
         $session->remove('logged_in');
         $session->remove('userData');
 
-        if ($session->has('logged_in')) {
-            echo 'logged in';
-        } else {
-            echo 'logged out';
-        }
-
-        return redirect()->to('users/login');
+        return redirect()->to("{$this->module}/{$this->class}/login");
     }
 
     function test()

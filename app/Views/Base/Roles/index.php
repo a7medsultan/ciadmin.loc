@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0"><?= lang('main.systemLogs') ?></h1>
+                    <h1 class="m-0">Roles</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#"><?= lang('main.home') ?></a></li>
-                        <li class="breadcrumb-item active"><?= lang('main.systemLog') ?></li>
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Roles</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -26,17 +26,18 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h5 class="m-0">
-                                <i class="fas fa-sitemap mx-2"></i><?= lang('main.listLogs') ?>
+                                <i class="fas fa-user-check mx-2"></i><?= lang('main.listRoles') ?>
+                                <button onclick='load_form(`<?= site_url("{$module}/{$class}/form") ?>`, `<?= lang("main.addRole") ?>`)' class="btn btn-sm btn-primary float-right mx-3" data-toggle="modal" data-target="#form_modal"><?= lang('main.btnAddNew') ?> <i class="fas fa-plus-circle"></i></button>
                             </h5>
                         </div>
                         <div class="card-body">
                             <div id="toolbar">
-                                <input type="text" id="search" name="search" class="mb-2 form-control" placeholder="Search">
                             </div>
                             <table
                                 id="table"
                                 class="table table-sm table-striped"
                                 data-toolbar="#toolbar"
+                                data-search="true"
                                 data-show-refresh="true"
                                 data-show-toggle="true"
                                 data-show-columns="true"
@@ -52,8 +53,7 @@
                                 data-page-list="[10, 25, 50, 100, all]"
                                 data-show-footer="false"
                                 data-side-pagination="server"
-                                data-query-params="queryParams"
-                                data-url="<?= base_url('systemLogs/datatable') ?>"
+                                data-url="<?= base_url("{$module}/{$class}/datatable") ?>"
                                 data-response-handler="responseHandler">
                             </table>
 
@@ -72,31 +72,31 @@
 <script>
     var $table = $('#table')
     var selections = []
-    
+
     function getIdSelections() {
-        return $.map($table.bootstrapTable('getSelections'), function (row) {
+        return $.map($table.bootstrapTable('getSelections'), function(row) {
             return row.id
         })
     }
-    
+
     function responseHandler(res) {
-        $.each(res.rows, function (i, row) {
+        $.each(res.rows, function(i, row) {
             row.state = $.inArray(row.id, selections) !== -1
         })
         return res
     }
-    
+
     function detailFormatter(index, row) {
         var html = []
-        $.each(row, function (key, value) {
+        $.each(row, function(key, value) {
             html.push('<p><b>' + key + ':</b> ' + value + '</p>')
         })
         return html.join('')
     }
-    
+
     function operateFormatter(value, row, index) {
         var html = `<div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false" data-container="body">
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                             <span class="sr-only">Toggle Dropdown</span>
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
@@ -108,15 +108,15 @@
                     </div>`;
         return html;
     }
-    
+
     window.operateEvents = {
-        'click .edit': function (e, value, row, index) {
-            load_form('<?= site_url("systemLogs/form/") ?>' + row.id, '<?= lang('main.editLog') ?>');
+        'click .edit': function(e, value, row, index) {
+            load_form('<?= site_url("{$module}/{$class}/form/") ?>' + row.id, 'Edit User');
             $('#form_modal').modal('show');
         },
-        'click .delete': function (e, value, row, index) {
+        'click .delete': function(e, value, row, index) {
             Swal.fire({
-                title: `<?= lang('main.deleteLog') ?> row.name ?`,
+                title: `Delete User ${row.full_name} ?`,
                 text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
@@ -125,125 +125,112 @@
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    
+
                     $.ajax({
-                        url: '<?= site_url("systemLogs/delete") ?>',
+                        url: '<?= site_url("{$module}/{$class}/delete") ?>',
                         method: 'post',
                         data: {
                             "id": row.id,
                             "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
                         },
-                        success: function (data) {
+                        success: function(data) {
                             $table.bootstrapTable('remove', {
                                 field: 'id',
                                 values: [row.id]
                             })
                             Swal.fire({
                                 title: "Deleted!",
-                                text: `row.name has been deleted.`,
+                                text: "Your file has been deleted.",
                                 icon: "success"
                             });
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             Swal.fire({
                                 title: "Error!",
-                                text: `row.name is not deleted.`,
+                                text: "Record is not deleted.",
                                 icon: "error"
                             });
                         }
                     });
-                    
+
                 }
             });
         }
     }
-    
+
+
     function totalTextFormatter(data) {
         return 'Total'
     }
-    
+
     function totalNameFormatter(data) {
         return data.length
     }
-    
+
     function totalPriceFormatter(data) {
         var field = this.field
-        return '$' + data.map(function (row) {
+        return '$' + data.map(function(row) {
             return +row[field].substring(1)
-        }).reduce(function (sum, i) {
+        }).reduce(function(sum, i) {
             return sum + i
         }, 0)
     }
-    
+
     function initTable() {
         $table.bootstrapTable('destroy').bootstrapTable({
             //height: 550,
             //locale: $('#locale').val(),
             locale: 'en-us',
-            columns: [
-                {
-                    field: 'sn',
+            columns: [{
+                    field: 'id',
                     title: '#',
-                    sortable: false,
+                    sortable: true,
                     align: 'center',
-                },
-                {
-                    field: 'created_at',
-                    title: '<?= lang('main.createdAt') ?>',
-                    sortable: true,
-                    align: 'center'
-                },
-                {
-                    field: 'action',
-                    title: '<?= lang('main.action') ?>',
-                    sortable: true,
-                    align: 'center'
                 },
                 {
                     field: 'name',
-                    title: '<?= lang('main.name') ?>',
+                    title: 'Role Name',
                     sortable: true,
                     align: 'center'
                 },
+
                 {
                     field: 'operate',
-                    title: '<?= lang('main.actions') ?>',
+                    title: 'Actions',
                     align: 'center',
                     clickToSelect: false,
                     events: window.operateEvents,
-                    formatter: operateFormatter,
-                    visible: false
+                    formatter: operateFormatter
                 }
             ]
         })
-        
-        $table.on('all.bs.table', function (e, name, args) {
-            //console.log(name, args)
+
+        $table.on('all.bs.table', function(e, name, args) {
+            console.log(name, args)
         })
-        
+
     }
-    
-    $(function () {
+
+    $(function() {
         initTable()
-        
     })
-    
-    $('#search').on('keyup', function () {
+
+    $('#search').on('keyup', function() {
         $table.bootstrapTable('refresh');
     });
-    
+
     function queryParams(params) {
         params.search = $('#search').val();
         return params
     }
-    
+
     function load_form(url, title) {
         $('#form_title').html('');
         $('#form_fields').html('');
         $.ajax({
             url: url,
             method: 'get',
-            success: function (response) {
+            success: function(response) {
                 $('#form_title').html(title);
                 $('#form_fields').html(response);
             }

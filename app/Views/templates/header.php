@@ -311,9 +311,9 @@
                         $systemSettingsActive = "";
                         $settingsActive = "";
 
-                        if (strpos(current_url(), site_url("settings")) !== false) {
+                        if (strpos(current_url(), site_url("base/settings")) !== false) {
                             $systemSettingsActive = "menu-open";
-                            $settingsActive = strpos(current_url(), site_url("settings")) !== false ? "active" : "";
+                            $settingsActive = strpos(current_url(), site_url("base/settings")) !== false ? "active" : "";
                         }
                         ?>
 
@@ -327,7 +327,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= site_url("settings") ?>" class="nav-link <?= $settingsActive ?>">
+                                    <a href="<?= site_url("base/settings") ?>" class="nav-link <?= $settingsActive ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>General Settings</p>
                                     </a>
@@ -345,13 +345,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= site_url("users") ?>" class="nav-link">
+                                    <a href="<?= site_url("base/users") ?>" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Users</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= site_url("roles") ?>" class="nav-link">
+                                    <a href="<?= site_url("base/roles") ?>" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Roles</p>
                                     </a>
@@ -359,13 +359,13 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= site_url("systemlogs") ?>" class="nav-link">
+                            <a href="<?= site_url("base/systemlogs") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>System Logs</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= site_url("users/logout") ?>" class="nav-link">
+                            <a href="<?= site_url("base/users/logout") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>Logout</p>
                             </a>

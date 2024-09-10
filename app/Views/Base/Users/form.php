@@ -2,7 +2,7 @@
     <!-- left column -->
     <div class="col-12">
         <!-- form start -->
-        <form id="save_form" action="<?= site_url("users/save") ?>" method="post" enctype="multipart/form-data">
+        <form id="save_form" action="<?= site_url("{$module}/{$class}/save") ?>" method="post" enctype="multipart/form-data">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="<?= $user['id'] ?>" />
             <div class="card">
