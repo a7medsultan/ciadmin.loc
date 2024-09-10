@@ -5,6 +5,7 @@ use App\Controllers\Base\Users;
 use App\Controllers\Base\Roles;
 use App\Controllers\Base\SystemLogs;
 use App\Controllers\Base\Settings;
+use App\Controllers\Base\Notifications;
 use App\Controllers\Base\Dashboard;
 
 /**
@@ -40,4 +41,9 @@ $routes->group('(?i)base', ['filter' => 'authFilter'], ["namespace" => "App\Cont
     $routes->get('(?i)settings', [Settings::class, 'index']);
     $routes->get('(?i)settings/index', [Settings::class, 'index']);
     $routes->post('(?i)settings/save', [Settings::class, 'save']);
+
+    $routes->get('(?i)notifications', [Notifications::class, 'index']);
+    $routes->get('(?i)notifications/datatable', [Notifications::class, 'datatable']);
+    $routes->get('(?i)notifications/details', [Notifications::class, 'details']);
+    $routes->post('(?i)notifications/resend', [Notifications::class, 'resend']);
 });

@@ -255,7 +255,7 @@
                             <span class="float-right text-muted text-sm">2 days</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        <a href="#" class="dropdown-item dropdown-footer"><?= lang('main.seeAllNotifications') ?></a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -302,72 +302,91 @@
                         <li class="nav-item">
                             <a href="<?= site_url("dashboard") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
+                                <p><?= lang('main.dashboard') ?></p>
                             </a>
                         </li>
 
 
                         <?php
-                        $systemSettingsActive = "";
-                        $settingsActive = "";
 
                         if (strpos(current_url(), site_url("base/settings")) !== false) {
                             $systemSettingsActive = "menu-open";
                             $settingsActive = strpos(current_url(), site_url("base/settings")) !== false ? "active" : "";
                         }
+                        if (strpos(current_url(), site_url("base/notifications")) !== false) {
+                            $systemSettingsActive = "menu-open";
+                            $notificationsActive = strpos(current_url(), site_url("base/notifications")) !== false ? "active" : "";
+                        }
+                        if (strpos(current_url(), site_url("base/users")) !== false) {
+                            $manageUsersActive = "menu-open";
+                            $usersActive = strpos(current_url(), site_url("base/users")) !== false ? "active" : "";
+                        }
+                        if (strpos(current_url(), site_url("base/roles")) !== false) {
+                            $manageUsersActive = "menu-open";
+                            $rolesActive = strpos(current_url(), site_url("base/roles")) !== false ? "active" : "";
+                        }
+                        if (strpos(current_url(), site_url("base/systemlogs")) !== false) {
+                            $systemLogActive = strpos(current_url(), site_url("base/systemlogs")) !== false ? "menu-open" : "";
+                        }
                         ?>
 
-                        <li class="nav-item <?= $systemSettingsActive ?>">
+                        <li class="nav-item <?= $systemSettingsActive ?? '' ?>">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p>
-                                    System Settings
+                                    <?= lang('main.systemSettings') ?>
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= site_url("base/settings") ?>" class="nav-link <?= $settingsActive ?>">
+                                    <a href="<?= site_url("base/settings") ?>" class="nav-link <?= $settingsActive ?? '' ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>General Settings</p>
+                                        <p><?= lang('main.generalSettings') ?></p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= site_url("base/notifications") ?>" class="nav-link <?= $notificationsActive ?? '' ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p><?= lang('main.notifications') ?></p>
                                     </a>
                                 </li>
 
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $manageUsersActive ?? '' ?>">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
-                                    Manage Users
+                                    <?= lang('main.manageUsers') ?>
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= site_url("base/users") ?>" class="nav-link">
+                                    <a href="<?= site_url("base/users") ?>" class="nav-link <?= $usersActive ?? '' ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Users</p>
+                                        <p><?= lang('main.users') ?></p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= site_url("base/roles") ?>" class="nav-link">
+                                    <a href="<?= site_url("base/roles") ?>" class="nav-link" <?= $rolesActive ?? '' ?>>
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Roles</p>
+                                        <p><?= lang('main.roles') ?></p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $systemLogActive ?? '' ?>">
                             <a href="<?= site_url("base/systemlogs") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
-                                <p>System Logs</p>
+                                <p><?= lang('main.systemLog') ?></p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="<?= site_url("base/users/logout") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
-                                <p>Logout</p>
+                                <p><?= lang('main.logout') ?></p>
                             </a>
                         </li>
 
