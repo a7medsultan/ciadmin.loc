@@ -185,7 +185,7 @@ class Roles extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => lang('msg.operationFailed.')
+                    'message' => lang('msg.operationFailed')
                 ]);
         }
     }

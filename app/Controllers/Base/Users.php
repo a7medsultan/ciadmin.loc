@@ -146,7 +146,7 @@ class Users extends BaseController
                     'label' => 'Password',
                     'rules' => $data['id'] ? 'required|min_length[8]|max_length[255]|regex_match[^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$]' : 'min_length[8]|max_length[255]|regex_match[^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$]',
                     'errors' => [
-                        'regex_match' => 'Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.'
+                        'regex_match' => lang('msg.PasswordRules')
                     ]
                 ];
                 $validationRules['password_confirmation'] = 'required|matches[password]';
@@ -210,7 +210,7 @@ class Users extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => true,
-                    'message' => 'Your success message here'
+                    'message' => lang('msg.recordSaved')
                 ]);
         } catch (\Exception $ex) {
             // Return an error response with HTTP status code 400
@@ -218,7 +218,7 @@ class Users extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => $ex->getMessage()
+                    'message' => lang('msg.recordNotSaved') . $ex->getMessage()
                 ]);
         }
     }
@@ -241,7 +241,7 @@ class Users extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => true,
-                    'message' => 'Your success message here'
+                    'message' => lang('msg.recordDeleted')
                 ]);
         } else {
             // Return an error response with HTTP status code 400
@@ -249,7 +249,7 @@ class Users extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => "operation failed"
+                    'message' => lang('msg.operationFailed')
                 ]);
         }
     }
@@ -310,26 +310,9 @@ class Users extends BaseController
 
             //Checks whether the submitted data passed the validation rules.
             if (!$this->validateData($data, [
-                'email' => [
-                    'rules' => "required|max_length[100]|valid_email|is_not_unique[users.email]",
-                    'errors' => [
-                        'required' => 'The email is required',
-                        'max_length' => 'Too long email',
-                        'valid_email' => 'Enter a valid email',
-                        'is_not_unique' => 'Email does not exists',
-                    ]
-                ],
-                'password' => [
-                    'rules' => 'required|max_length[20]|min_length[8]',
-                    'errors' => [
-                        'required' => 'The password is required',
-                        'max_length' => 'Password must be < 20 character',
-                        'min_length' => 'Password must be at least 8 characters long',
-                    ]
-                ],
-            ]))
-            //if (true)
-            {
+                'email' => "required|max_length[100]|valid_email|is_not_unique[users.email]",
+                'password' => "required|max_length[20]|min_length[8]",
+            ])) {
                 // Return an error response with HTTP status code 400
 
                 return $this->response->setStatusCode(Response::HTTP_BAD_REQUEST)
@@ -353,7 +336,7 @@ class Users extends BaseController
                     ->setContentType('application/json')
                     ->setJSON([
                         'success' => false,
-                        'message' => 'Email and Password combination is incorrect' . $password
+                        'message' => lang('msg.invalidUsernamePasswordCombo')
                     ]);
             }
 

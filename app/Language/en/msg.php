@@ -10,5 +10,6 @@ return [
     'PasswordRules' => 'Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.',
     'strongPassword' => 'Password is strong!',
     'error' => 'Error',
-    'invalidData' => 'You have some errors, please enter valid data.'
+    'invalidData' => 'You have some errors, please enter valid data.',
+    'invalidUsernamePasswordCombo' => 'Email and Password combination is incorrect.',
 ];

@@ -160,7 +160,7 @@ class Settings extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => lang('msg.recordNotSaved') . $ex->getMessage()
+                    'message' => lang('msg.recordNotSaved')
                 ]);
         }
     }
