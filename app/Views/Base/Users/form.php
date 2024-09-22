@@ -159,8 +159,10 @@
 
     $('#save_close').on('click', function(e) {
         e.preventDefault();
-        submitForm();
-        closeFormModal();
+        if (submitForm()) {
+            closeFormModal();
+        }
+
     });
 
     function submitForm() {
@@ -181,6 +183,8 @@
                             </div>
                             `);
 
+                    toastr.success(data.message)
+
 
                     setTimeout(function() {
                         $('.form_response').fadeOut();
@@ -191,62 +195,29 @@
                         clearForm($('#save_form')[0]);
                     }
 
+                    return true;
+
                 },
                 error: function(xhr) {
-                    // Handle first_name errors
-                    if (xhr.responseJSON.message.first_name) {
-                        $('#first_name').addClass('error');
-                        $('#first_name').parent().find('label.error').remove(); // Remove any existing error label
-                        $('#first_name').parent().append(`<label id="first_name-error" class="error" for="first_name">${xhr.responseJSON.message.first_name}.</label>`);
-                    }
-
-                    // Handle last_name errors
-                    if (xhr.responseJSON.message.last_name) {
-                        $('#last_name').addClass('error');
-                        $('#last_name').parent().find('label.error').remove();
-                        $('#last_name').parent().append(`<label id="last_name-error" class="error" for="last_name">${xhr.responseJSON.message.last_name}.</label>`);
-                    }
-
-                    // Handle email errors
-                    if (xhr.responseJSON.message.email) {
-                        $('#email').addClass('error');
-                        $('#email').parent().find('label.error').remove();
-                        $('#email').parent().append(`<label id="email-error" class="error" for="email">${xhr.responseJSON.message.email}.</label>`);
-                    }
-
-                    // Handle phone errors
-                    if (xhr.responseJSON.message.phone) {
-                        $('#phone').addClass('error');
-                        $('#phone').parent().find('label.error').remove();
-                        $('#phone').parent().append(`<label id="phone-error" class="error" for="phone">${xhr.responseJSON.message.phone}.</label>`);
-                    }
-
-                    // Handle password errors
-                    if (xhr.responseJSON.message.password) {
-                        $('#password').addClass('error');
-                        $('#password').parent().parent().find('label.error').remove();
-                        $('#password').parent().parent().append(`<label id="password-error" class="error" for="password">${xhr.responseJSON.message.password}.</label>`);
-                    }
-
-                    // Handle password confirmation errors
-                    if (xhr.responseJSON.message.password_confirmation) {
-                        $('#password_confirmation').addClass('error');
-                        $('#password_confirmation').parent().parent().find('label.error').remove();
-                        $('#password_confirmation').parent().parent().append(`<label id="password_confirmation-error" class="error" for="password_confirmation">${xhr.responseJSON.message.password_confirmation.replace(/_/g, ' ')}.</label>`);
+                    if (xhr.responseJSON.message) {
+                        handleErrors(xhr.responseJSON.message);
                     }
 
                     // General form response for errors
                     $('.form_response').html(`
                                                 <div class="callout callout-danger">
-                                                    <h5>Errors</h5>
-                                                    <p>You have some errors, please enter valid data</p>
+                                                    <h5><?= lang('msg.error') ?></h5>
+                                                    <p><?= lang('msg.invalidData') ?></p>
                                                 </div>
                                             `);
+                    toastr.error('<?= lang('msg.invalidData') ?>')
 
                     // Hide the message after 4 seconds
                     setTimeout(function() {
                         $('.form_response').fadeOut();
                     }, 4000);
+
+                    return false;
                 },
 
                 cache: false,
@@ -257,10 +228,33 @@
 
             if (!validatePassword(password)) {
                 event.preventDefault(); // Prevent form submission if password is not strong
-                $('#passwordFeedback').html('Password is too weak.').removeClass('text-success').addClass('text-warning');
+                $('#passwordFeedback').html('<?= lang('msg.weekPassword') ?>').removeClass('text-success').addClass('text-warning');
             }
+
+            return false;
         }
 
+
+
+    }
+
+    function handleErrors(errors) {
+        Object.keys(errors).forEach(function(field) {
+            let errorMessage = errors[field];
+            let fieldElement = $('#' + field);
+            console.log(field);
+            // Special case for password and password confirmation (they have deeper nesting)
+            if (field === 'password' || field === 'password_confirmation') {
+
+                fieldElement.addClass('error');
+                fieldElement.parent().parent().find('label.error').remove();
+                fieldElement.parent().parent().append(`<label id="${field}-error" class="error" for="${field}">${errorMessage}.</label>`);
+            } else {
+                fieldElement.addClass('error');
+                fieldElement.parent().find('label.error').remove();
+                fieldElement.parent().append(`<label id="${field}-error" class="error" for="${field}">${errorMessage}.</label>`);
+            }
+        });
     }
 
     function clearForm(formSelector) {
@@ -303,20 +297,20 @@
         let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         if (!regex.test(password)) {
-            feedback = 'Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.';
+            feedback = '<?= lang('msg.PasswordRules') ?>';
             return false;
         }
 
-        feedback = 'Password is strong!';
+        feedback = '<?= lang('msg.strongPassword') ?>';
         return true;
     }
 
     $(document).on('keyup', '#password', function() {
         let password = $(this).val();
         if (validatePassword(password)) {
-            $('#passwordFeedback').text('Password is strong!').removeClass('text-warning').addClass('text-success');
+            $('#passwordFeedback').text('<?= lang('msg.strongPassword') ?>').removeClass('text-warning').addClass('text-success');
         } else {
-            $('#passwordFeedback').text('Password is too weak.').removeClass('text-success').addClass('text-warning');
+            $('#passwordFeedback').text('<?= lang('msg.weekPassword') ?>').removeClass('text-success').addClass('text-warning');
         }
     });
 </script>

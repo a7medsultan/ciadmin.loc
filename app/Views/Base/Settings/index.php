@@ -67,6 +67,15 @@
 
                                                         <div class="form-row">
                                                             <div class="form-group col-lg-6 col-md-12">
+                                                                <label for="dark_mode"><?= lang('main.darkMode') ?></label>
+                                                                <p>
+                                                                    <input <?= $settings['general_settings']['dark_mode'] == 'on' ? "checked" : "" ?> type="checkbox" id="dark_mode" name="dark_mode" data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-row">
+                                                            <div class="form-group col-lg-6 col-md-12">
                                                                 <label for="clear_log_every"><?= lang('main.clearLogEvery') ?></label>
                                                                 <select name="clear_log_every" id="clear_log_every" class="select2bs4 form-control form-control-sm">
                                                                     <option <?= isset($settings['general_settings']['clear_log_every']) && $settings['general_settings']['clear_log_every'] == 1 ? "selected" : "" ?> value="1"><?= lang('main.everyMonth') ?></option>
@@ -186,21 +195,10 @@
                 type: $('#save_form').attr("method"),
                 data: formData,
                 success: function(data) {
-                    $('.form_response').html(`
-                            <div class="callout callout-success">
-                                <h5>Success</h5>
-                                <p>${data.message}</p>
-                            </div>
-                            `);
+                    toastr.success(data.message)
                 },
                 error: function(xhr) {
-                    $('.form_response').html(`
-                            <div class="callout callout-danger">
-                                <h5>Errors</h5>
-                                <p>${xhr.responseJSON.message}</p>
-                            </div>
-                            `);
-
+                    toastr.error(xhr.responseJSON.message)
                 },
                 cache: false,
                 contentType: false,

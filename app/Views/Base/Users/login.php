@@ -111,7 +111,7 @@
                             </div>
                             `);
 
-                    var destinationUrl = '<?= site_url('dashboard') ?>';
+                    var destinationUrl = '<?= site_url('base/dashboard') ?>';
                     // Replace 'delay_in_milliseconds' with the desired delay before redirection (in milliseconds)
                     var delayInMilliseconds = 3000; // 3 seconds
                     setTimeout(function() {
@@ -122,7 +122,7 @@
                 error: function(xhr) {
                     $('.error_response').html(`
                             <div class="callout callout-danger">
-                                <h5><?= lang('main.error') ?></h5>
+                                <h5><?= lang('msg.error') ?></h5>
                                 <p>${xhr.responseJSON.message}</p>
                             </div>
                             `);

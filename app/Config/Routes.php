@@ -7,6 +7,7 @@ use App\Controllers\Base\SystemLogs;
 use App\Controllers\Base\Settings;
 use App\Controllers\Base\Notifications;
 use App\Controllers\Base\Dashboard;
+use App\Controllers\Api\ApiController;
 
 /**
  * @var RouteCollection $routes
@@ -46,4 +47,8 @@ $routes->group('(?i)base', ['filter' => 'authFilter'], ["namespace" => "App\Cont
     $routes->get('(?i)notifications/datatable', [Notifications::class, 'datatable']);
     $routes->get('(?i)notifications/details', [Notifications::class, 'details']);
     $routes->post('(?i)notifications/resend', [Notifications::class, 'resend']);
+});
+
+$routes->group('(?i)api', ["namespace" => "App\Controllers\Api"], static function ($routes) {
+    $routes->post('(?i)api/facilities', [ApiController::class, 'findFacility']);
 });

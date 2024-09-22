@@ -146,7 +146,7 @@ class Roles extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => true,
-                    'message' => 'Your success message here'
+                    'message' => lang('msg.recordSaved')
                 ]);
         } catch (\Exception $ex) {
             // Return an error response with HTTP status code 400
@@ -154,7 +154,7 @@ class Roles extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => $ex->getMessage()
+                    'message' => lang('msg.recordNotSaved') . $ex->getMessage()
                 ]);
         }
     }
@@ -177,7 +177,7 @@ class Roles extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => true,
-                    'message' => 'Your success message here'
+                    'message' => lang('msg.recordDeleted')
                 ]);
         } else {
             // Return an error response with HTTP status code 400
@@ -185,7 +185,7 @@ class Roles extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => "operation failed"
+                    'message' => lang('msg.operationFailed.')
                 ]);
         }
     }

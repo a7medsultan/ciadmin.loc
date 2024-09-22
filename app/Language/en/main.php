@@ -1,6 +1,5 @@
 <?php
 
-// override core en language system validation or define your own en language validation message
 return [
     'btnSave' => 'Save',
     'btnSaveClose' => 'Save &amp; Close',
@@ -134,4 +133,8 @@ return [
     'systemLog' => 'System Log',
     'logout' => 'Logout',
     'seeAllNotifications' => 'See All Notifications',
+    'darkMode' => 'Dark Mode',
+    'fullName' => 'Full Name',
+    'phone' => 'Phone',
+    'role' => 'Role',
 ];

@@ -119,7 +119,7 @@
         'click .delete': function(e, value, row, index) {
             Swal.fire({
                 title: `Delete User ${row.full_name} ?`,
-                text: "You won't be able to revert this!",
+                text: "<?= lang('msg.operationCantBeReverted') ?>",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -142,14 +142,14 @@
                             })
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your file has been deleted.",
+                                text: "<?= lang('msg.recordDeleted') ?>",
                                 icon: "success"
                             });
                         },
                         error: function(xhr) {
                             Swal.fire({
                                 title: "Error!",
-                                text: "Record is not deleted.",
+                                text: "<?= lang('msg.operationCantBeReverted') ?>",
                                 icon: "error"
                             });
                         }
@@ -190,39 +190,39 @@
                 },
                 {
                     field: 'created_at',
-                    title: 'Created At',
+                    title: '<?= lang('main.createdAt') ?>',
                     sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'full_name',
-                    title: 'Full Name',
+                    title: '<?= lang('main.fullName') ?>',
                     sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'email',
-                    title: 'Email',
+                    title: '<?= lang('main.email') ?>',
                     sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'phone',
-                    title: 'Phone',
+                    title: '<?= lang('main.phone') ?>',
                     sortable: true,
                     align: 'center'
                 },
 
                 {
                     field: 'role',
-                    title: 'Role',
+                    title: '<?= lang('main.role') ?>',
                     sortable: true,
                     align: 'center'
                 },
 
                 {
                     field: 'operate',
-                    title: 'Actions',
+                    title: '<?= lang('main.actions') ?>',
                     align: 'center',
                     clickToSelect: false,
                     events: window.operateEvents,

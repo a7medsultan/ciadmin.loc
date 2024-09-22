@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin</title>
+    <title>Admin | <?= $title ?></title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -35,7 +35,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/ltr/dist/css/adminlte.css">
 
-
+    <!-- Toastr -->
+    <link rel="stylesheet" href="<?= base_url() ?>assets/ltr/plugins/toastr/toastr.min.css">
 
 
     <!-- REQUIRED SCRIPTS -->
@@ -83,12 +84,22 @@
     <!-- Bootstrap Switch -->
     <script src="<?= base_url() ?>assets/ltr/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 
+
+    <!-- Toastr -->
+    <script src="<?= base_url() ?>assets/ltr/plugins/toastr/toastr.min.js"></script>
+
     <!-- AdminLTE App -->
     <script src="<?= base_url() ?>assets/ltr/dist/js/adminlte.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="<?= base_url() ?>assets/ltr/dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="<?= base_url() ?>assets/ltr/dist/js/pages/dashboard2.js"></script>
+
+    <?php
+    if ($class == 'Dashboard') {
+    ?>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="<?= base_url() ?>assets/ltr/dist/js/pages/dashboard2.js"></script>
+    <?php
+    }
+    ?>
+
 
     <style>
         /* force select2 to match bootstrap form-control-sm */
@@ -126,7 +137,7 @@
 
 </head>
 
-<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapse text-sm">
+<body class="hold-transition <?= /*isset($darkMode) && $darkMode*/ true ? 'dark-mode' : '' ?> sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapse text-sm">
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -300,7 +311,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                                          with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="<?= site_url("dashboard") ?>" class="nav-link">
+                            <a href="<?= site_url("base/dashboard") ?>" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p><?= lang('main.dashboard') ?></p>
                             </a>

@@ -128,6 +128,7 @@
                                 <p>${data.message}</p>
                             </div>
                             `);
+                    toastr.success(data.message)
                     clearForm($('#save_form')[0]);
                 },
                 error: function(xhr) {
@@ -137,7 +138,7 @@
                                 <p>${xhr.responseJSON.message}</p>
                             </div>
                             `);
-
+                    toastr.error('<?= lang('msg.invalidData') ?>')
                 },
                 cache: false,
                 contentType: false,

@@ -47,7 +47,8 @@ class Settings extends BaseController
         if (!$settings) {
             $general_settings = [
                 'default_language' => 'en',
-                'email_notifications' => 'on'
+                'email_notifications' => 'on',
+                'dark_mode' => 'on'
             ];
             $email_settings = [
                 'email' => 'email@email.com',
@@ -87,6 +88,7 @@ class Settings extends BaseController
 
             $data = $this->request->getPost([
                 'default_language',
+                'dark_mode',
                 'email_notifications',
                 'full_screen',
                 'mail_server',
@@ -120,6 +122,7 @@ class Settings extends BaseController
             $general_settings = [
                 'default_language' => $post['default_language'],
                 'email_notifications' => $data['email_notifications'],
+                'dark_mode' => $data['dark_mode'],
                 'full_screen' => $data['full_screen'],
             ];
             $email_settings = [
@@ -149,7 +152,7 @@ class Settings extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => true,
-                    'message' => 'The record is saved successfully'
+                    'message' => lang('msg.recordSaved')
                 ]);
         } catch (\Exception $ex) {
             // Return an error response with HTTP status code 400
@@ -157,7 +160,7 @@ class Settings extends BaseController
                 ->setContentType('application/json')
                 ->setJSON([
                     'success' => false,
-                    'message' => $ex->getMessage()
+                    'message' => lang('msg.recordNotSaved') . $ex->getMessage()
                 ]);
         }
     }

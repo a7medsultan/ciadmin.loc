@@ -71,8 +71,16 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            'honeypot',
-            // 'csrf',
+            'honeypot' => [
+                'except' => [
+                    'api/*', // Exclude all API routes from CSRF
+                ],
+            ],
+            'csrf' => [
+                'except' => [
+                    'api/*', // Exclude all API routes from CSRF
+                ]
+            ],
             // 'invalidchars',
         ],
         'after' => [
@@ -95,7 +103,7 @@ class Filters extends BaseFilters
      * @var array<string, list<string>>
      */
     public array $methods = [
-        'post' => ['csrf'],
+        // 'post' => ['csrf'],
     ];
 
     /**
