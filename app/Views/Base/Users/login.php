@@ -28,7 +28,7 @@
 
                 <div class="success_response"></div>
 
-                <form id="login_form" action="<?= site_url("users/authenticate") ?>" method="post">
+                <form id="login_form" action="<?= site_url("$module/$class/authenticate") ?>" method="post">
                     <?= csrf_field() ?>
                     <div class="input-group input-group-sm mb-3">
                         <input type="email" name="email" id="email" class="form-control" placeholder="<?= lang('main.email') ?>">

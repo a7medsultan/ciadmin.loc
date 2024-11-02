@@ -13,6 +13,7 @@ class FacilityModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        'state_id',
         'name',
         'summery',
         'phone',

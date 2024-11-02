@@ -12,8 +12,8 @@ use App\Controllers\Api\ApiController;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('(?i)users/login', [Users::class, 'login']);
-$routes->post('(?i)users/authenticate', [Users::class, 'authenticate']);
+$routes->get('(?i)base/users/login', [Users::class, 'login']);
+$routes->post('(?i)base/users/authenticate', [Users::class, 'authenticate']);
 
 $routes->group('(?i)base', ['filter' => 'authFilter'], ["namespace" => "App\Controllers\Base"], static function ($routes) {
     $routes->get('(?i)users', [Users::class, 'index']);

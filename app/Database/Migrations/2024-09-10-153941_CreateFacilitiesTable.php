@@ -15,6 +15,10 @@ class CreateFacilitiesTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'state_id'            => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+            ],
             'name'          => [
                 'type'           => 'VARCHAR',
                 'constraint'     => 255,
